@@ -23,11 +23,7 @@ module.exports.getUserId = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: `Некорректные данные профиля пользователя. ${err}` });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: `На сервере произошла ошибка. ${err}` });
-      }
+      res.status(INTERNAL_SERVER_ERROR).send({ message: `На сервере произошла ошибка. ${err}` });
     });
 };
 
