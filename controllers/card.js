@@ -54,7 +54,6 @@ module.exports.deleteCard = (req, res) => {
 };
 
 module.exports.likeCard = (req, res) => {
-  console.log(req.params.cardId);
   if (req.params.cardId) {
     Card.findByIdAndUpdate(
       req.params.cardId,
