@@ -14,15 +14,12 @@ module.exports.getCard = (req, res) => {
 };
 
 module.exports.createCard = (req, res) => {
-  console.log(req.user._id); // _id станет доступен
   const { name, link, owner } = req.body;
-  if (owner === req.user._id) {
-    Card.create({ name, link, owner })
-      .then((card) => res.send({ data: card }))
-      .catch((err) => {
-        res.status(BAD_REQUEST).send({ message: `Переданы некорректные данные при создании карточки. ${err}` });
-      });
-  }
+  Card.create({ name, link, owner })
+    .then((card) => res.send({ data: card }))
+    .catch((err) => {
+      res.status(BAD_REQUEST).send({ message: `Переданы некорректные данные при создании карточки. ${err}` });
+    });
 };
 
 module.exports.deleteCard = (req, res) => {
