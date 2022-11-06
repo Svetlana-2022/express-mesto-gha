@@ -77,7 +77,7 @@ module.exports.dislikeCard = (req, res) => {
       if (!card) {
         res.status(NOT_FOUND).send({ message: 'Передан несуществующий _id карточки.' });
       }
-      res.send({ data: card });
+      res.send({ data: card.likes });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
