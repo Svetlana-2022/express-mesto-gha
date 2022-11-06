@@ -24,7 +24,7 @@ module.exports.getUserId = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ message: `Некорректные данные _id пользователя. ${err}` });
+        res.status(INTERNAL_SERVER_ERROR).send({ message: `На сервере произошла ошибка. Некорректные данные _id пользователя. ${err}` });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send({ message: `На сервере произошла ошибка. ${err}` });
       }
