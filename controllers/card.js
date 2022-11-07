@@ -28,7 +28,6 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
-  // console.log(cardId);
   Card.findByIdAndRemove(cardId)
     .then((card) => {
       if (!card) {
@@ -39,7 +38,6 @@ module.exports.deleteCard = (req, res) => {
     })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      console.log(err.name);
       if (err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: `Некорректные данные карточки. ${err}` });
       } else if (err.name === 'TypeError') {
