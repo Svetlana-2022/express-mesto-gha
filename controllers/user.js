@@ -7,8 +7,8 @@ const INTERNAL_SERVER_ERROR = 500;
 module.exports.getUser = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => {
-      res.status(INTERNAL_SERVER_ERROR).send({ message: `На сервере произошла ошибка. ${err}` });
+    .catch(() => {
+      res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });
     });
 };
 
@@ -24,11 +24,9 @@ module.exports.getUserId = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: `Некорректные данные _id пользователя. ${err}` });
-      } else if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ message: `Некорректные данные _id пользователя. ${err}` });
+        res.status(BAD_REQUEST).send({ message: 'Некорректные данные _id пользователя.' });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: `На сервере произошла ошибка. ${err}` });
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });
       }
     });
 };
@@ -38,7 +36,11 @@ module.exports.createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      res.status(BAD_REQUEST).send({ message: `Некорректные данные пользователя. ${err}` });
+      if (err.name === 'CastError') {
+        res.status(BAD_REQUEST).send({ message: 'Некорректные данные _id пользователя.' });
+      } else if (err.name === 'ValidationError') {
+        res.status(BAD_REQUEST).send({ message: 'Некорректные данные _id пользователя.' });
+      }
     });
 };
 
@@ -57,9 +59,9 @@ module.exports.updateUserMe = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ message: `Некорректные данные профиля пользователя. ${err}` });
+        res.status(BAD_REQUEST).send({ message: 'Некорректные данные профиля пользователя.' });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: `На сервере произошла ошибка. ${err}` });
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });
       }
     });
 };
@@ -79,9 +81,9 @@ module.exports.updateUserMeAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ message: `Некорректные данные аватара пользователя. ${err}` });
+        res.status(BAD_REQUEST).send({ message: 'Некорректные данные аватара пользователя.' });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: `На сервере произошла ошибка. ${err}` });
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });
       }
     });
 };
