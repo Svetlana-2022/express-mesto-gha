@@ -1,35 +1,32 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
+const { celebrateBodyUser, celebrateBodyAuth } = require('./validators/users');
+const { createUser, login } = require('./controllers/user');
+const { auth } = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 
 const app = express();
 
-const NOT_FOUND = 404;
+const INTERNAL_SERVER_ERROR = 500;
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 app.use(bodyParser.json());
+app.post('/signup', celebrateBodyUser, createUser);
+app.post('/signin', celebrateBodyAuth, login);
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '63629c1b6cc026d4a919946d',
-  };
-  // псевдоавторизация
-  if (req.headers.Authorization || req.headers.authorization) {
-    req.user._id = req.headers.Authorization || req.headers.authorization;
-  }
+app.use(auth);
+app.use('/', require('./routes/user'));
+app.use('/', require('./routes/card'));
 
-  next();
-});
-
-app.use(require('./routes/user'));
-app.use(require('./routes/card'));
-
-app.use((req, res, next) => {
-  res.status(NOT_FOUND).send({ message: 'Передан несуществующий _id карточки.' });
-
+app.use(errors());
+app.use((err, req, res, next) => {
+  const status = err.statusCode || INTERNAL_SERVER_ERROR;
+  const message = err.message || 'Неизвестная ошибка';
+  res.status(status).send({ message });
   next();
 });
 
