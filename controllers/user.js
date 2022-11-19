@@ -5,6 +5,7 @@ const BadRequestError = require('../errors/BedRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ServerError = require('../errors/ServerError');
 const ConflictError = require('../errors/ConflictError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 const User = require('../models/user');
 
 const CREATED = 201;
@@ -77,7 +78,7 @@ module.exports.login = (req, res, next) => {
       if (err instanceof HTTPError) {
         next(err);
       } else {
-        next(new ServerError(err.message));
+        next(new UnauthorizedError(err.message));
       }
     });
 };
@@ -130,6 +131,7 @@ module.exports.updateUserMe = (req, res, next) => {
 
 module.exports.updateUserMeAvatar = (req, res, next) => {
   const { avatar } = req.body;
+  console.log(req.user);
   User.findByIdAndUpdate(req.user._id, { avatar }, {
     new: true,
     runValidators: true,

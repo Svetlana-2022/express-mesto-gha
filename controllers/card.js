@@ -17,6 +17,7 @@ module.exports.createCard = (req, res, next) => {
   req.body.owner = req.user._id;
   Card.create(req.body)
     .then((card) => {
+      console.log(card, '---card');
       res.send({ data: card });
     })
     .catch((err) => {
