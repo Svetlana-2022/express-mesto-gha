@@ -22,6 +22,10 @@ app.use(auth);
 app.use('/', require('./routes/user'));
 app.use('/', require('./routes/card'));
 
+app.all('/*', (req, res) => {
+  res.status(404).send({ message: 'Страница не найдена' });
+});
+
 app.use(errors());
 app.use((err, req, res, next) => {
   const status = err.statusCode || INTERNAL_SERVER_ERROR;

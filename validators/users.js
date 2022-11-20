@@ -49,7 +49,7 @@ module.exports.celebrateUserMeAvatar = celebrate({
 module.exports.celebrateCards = celebrate({
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().uri(),
+    link: Joi.string().required().uri({ scheme: ['http', 'https'] }),
   }),
 });
 module.exports.celebrateParamsCards = celebrate({
