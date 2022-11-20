@@ -28,6 +28,13 @@ module.exports.celebrateBodyAuth = celebrate({
     password: Joi.string().required().min(8),
   }),
 });
+module.exports.celebrateUsers = celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().uri({ scheme: ['http', 'https'] }),
+  }),
+});
 module.exports.celebrateUserMe = celebrate({
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().min(2).max(30),
