@@ -92,15 +92,6 @@ module.exports.getUserMe = (req, res, next) => {
       }
     })
     .catch(next);
-  // .catch((err) => {
-  //   if (err instanceof HTTPError) {
-  //     next(err);
-  //   } else if (err.name === 'CastError') {
-  //     next(new BadRequestError('Некорректные данные пользователя.'));
-  //   } else {
-  //     next(new ServerError('Произошла ошибка'));
-  //   }
-  // });
 };
 
 module.exports.updateUserMe = (req, res, next) => {
