@@ -1,38 +1,31 @@
 const { Joi, Segments, celebrate } = require('celebrate');
 
+const linkAvatar = /^https?:\/\/[www.]?[a-zA-Z0-9]+[\w\-._~:/?#[\]$&'()*+,;*]{2,}#?$/;
+
 module.exports.celebrateBodyUser = celebrate({
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().uri({ scheme: ['http', 'https'] }),
+    avatar: Joi.string().pattern(linkAvatar),
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   }),
 });
 module.exports.celebrateParamsUserMe = celebrate({
   [Segments.PARAMS]: Joi.object({
-    id: Joi.alternatives().try(
-      Joi.string().equal('me'),
-      Joi.string().hex().length(24),
-    ).required(),
-  }).required(),
-});
-module.exports.celebrateParamsMe = celebrate({
-  [Segments.PARAMS]: Joi.object({
-    me: Joi.string().equal('me'),
+    id: Joi.string().hex().length(24),
   }).required(),
 });
 module.exports.celebrateBodyAuth = celebrate({
   [Segments.BODY]: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   }),
 });
 module.exports.celebrateUsers = celebrate({
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().uri({ scheme: ['http', 'https'] }),
   }),
 });
 module.exports.celebrateUserMe = celebrate({
@@ -43,13 +36,13 @@ module.exports.celebrateUserMe = celebrate({
 });
 module.exports.celebrateUserMeAvatar = celebrate({
   [Segments.BODY]: Joi.object().keys({
-    avatar: Joi.string().uri({ scheme: ['http', 'https'] }),
+    avatar: Joi.string().pattern(linkAvatar),
   }),
 });
 module.exports.celebrateCards = celebrate({
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().uri({ scheme: ['http', 'https'] }),
+    link: Joi.string().required().pattern(linkAvatar),
   }),
 });
 module.exports.celebrateParamsCards = celebrate({

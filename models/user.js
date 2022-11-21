@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 
 const validator = require('validator');
 
-const linkAvatar = /https?:\/\//;
+const linkAvatar = /^https?:\/\/[www.]?[a-zA-Z0-9]+[\w\-._~:/?#[\]$&'()*+,;*]{2,}#?$/;
 
 const userSchema = new mongoose.Schema({
   name: {

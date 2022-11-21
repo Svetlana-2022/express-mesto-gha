@@ -15,7 +15,14 @@ module.exports.getCard = (req, res, next) => {
 
 module.exports.createCard = (req, res, next) => {
   req.body.owner = req.user._id;
-  Card.create(req.body)
+  console.log(req.body);
+  Card.create({
+    name: req.body.name,
+    link: req.body.link,
+    owner: req.body.owner,
+    likes: req.body.likes,
+    createdAt: req.body.createdAt,
+  })
     .then((card) => {
       console.log(card, '---card');
       res.send({ data: card });
@@ -26,7 +33,7 @@ module.exports.createCard = (req, res, next) => {
       } else if (err.name === 'ValidationError') {
         next(new BadRequestError('Некорректные данные карточки.'));
       } else {
-        next(new ServerError(err.message));
+        next(new ServerError('Произошла ошибка'));
       }
     });
 };
@@ -41,7 +48,8 @@ module.exports.deleteCard = (req, res, next) => {
         throw new ForbiddenError('Запрещено');
       } else {
         card.remove()
-          .then(() => res.send({ data: card }));
+          .then(() => res.send({ data: card }))
+          .catch(next);
       }
     })
     .catch((err) => {
@@ -50,7 +58,7 @@ module.exports.deleteCard = (req, res, next) => {
       } else if (err.name === 'CastError') {
         next(new BadRequestError('Некорректные данные карточки.'));
       } else {
-        next(new ServerError(err.message));
+        next(new ServerError('Произошла ошибка'));
       }
     });
 };
@@ -74,7 +82,7 @@ module.exports.likeCard = (req, res, next) => {
       } else if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError('Некорректные данные карточки.'));
       } else {
-        next(new ServerError(err.message));
+        next(new ServerError('Произошла ошибка'));
       }
     });
 };
@@ -98,7 +106,7 @@ module.exports.dislikeCard = (req, res, next) => {
       } else if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError('Некорректные данные карточки.'));
       } else {
-        next(new ServerError(err.message));
+        next(new ServerError('Произошла ошибка'));
       }
     });
 };

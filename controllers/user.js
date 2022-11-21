@@ -30,12 +30,10 @@ module.exports.getUserId = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err instanceof HTTPError) {
-        next(err);
-      } else if (err.name === 'CastError') {
+      if (err.name === 'CastError') {
         next(new BadRequestError('Некорректные данные пользователя.'));
       } else {
-        next(new ServerError(err.message));
+        next(err);
       }
     });
 };
@@ -62,7 +60,7 @@ module.exports.createUser = (req, res, next) => {
       } else if (err.name === 'ValidationError') {
         next(new BadRequestError('Некорректные данные пользователя.'));
       } else {
-        next(new ServerError(err.message));
+        next(new ServerError('Произошла ошибка'));
       }
     });
 };
@@ -78,7 +76,7 @@ module.exports.login = (req, res, next) => {
       if (err instanceof HTTPError) {
         next(err);
       } else {
-        next(new UnauthorizedError(err.message));
+        next(new UnauthorizedError('Невалидный пароль'));
       }
     });
 };
@@ -93,15 +91,16 @@ module.exports.getUserMe = (req, res, next) => {
         res.send(user);
       }
     })
-    .catch((err) => {
-      if (err instanceof HTTPError) {
-        next(err);
-      } else if (err.name === 'CastError') {
-        next(new BadRequestError('Некорректные данные пользователя.'));
-      } else {
-        next(new ServerError(err.message));
-      }
-    });
+    .catch(next);
+  // .catch((err) => {
+  //   if (err instanceof HTTPError) {
+  //     next(err);
+  //   } else if (err.name === 'CastError') {
+  //     next(new BadRequestError('Некорректные данные пользователя.'));
+  //   } else {
+  //     next(new ServerError('Произошла ошибка'));
+  //   }
+  // });
 };
 
 module.exports.updateUserMe = (req, res, next) => {
@@ -124,7 +123,7 @@ module.exports.updateUserMe = (req, res, next) => {
       } else if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError('Некорректные данные пользователя.'));
       } else {
-        next(new ServerError(err.message));
+        next(new ServerError('Произошла ошибка'));
       }
     });
 };
@@ -149,7 +148,7 @@ module.exports.updateUserMeAvatar = (req, res, next) => {
       } else if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError('Некорректные данные пользователя.'));
       } else {
-        next(new ServerError(err.message));
+        next(new ServerError('Произошла ошибка'));
       }
     });
 };

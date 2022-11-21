@@ -5,6 +5,7 @@ const { errors } = require('celebrate');
 const { celebrateBodyUser, celebrateBodyAuth } = require('./validators/users');
 const { createUser, login } = require('./controllers/user');
 const { auth } = require('./middlewares/auth');
+const NotFoundError = require('./errors/NotFoundError');
 
 const { PORT = 3000 } = process.env;
 
@@ -22,15 +23,16 @@ app.use(auth);
 app.use('/', require('./routes/user'));
 app.use('/', require('./routes/card'));
 
-app.all('/*', (req, res) => {
-  res.status(404).send({ message: 'Страница не найдена' });
+app.all('/*', (req, res, next) => {
+  next(new NotFoundError('Маршрут не найден'));
 });
 
 app.use(errors());
 app.use((err, req, res, next) => {
-  const status = err.statusCode || INTERNAL_SERVER_ERROR;
-  const message = err.message || 'Неизвестная ошибка';
-  res.status(status).send({ message });
+  const statusCode = err.statusCode || INTERNAL_SERVER_ERROR;
+  const message = statusCode === INTERNAL_SERVER_ERROR ? 'На сервере произошла ошибка' : err.message;
+  // const message = err.message || 'Неизвестная ошибка';
+  res.status(statusCode).send({ message });
   next();
 });
 
